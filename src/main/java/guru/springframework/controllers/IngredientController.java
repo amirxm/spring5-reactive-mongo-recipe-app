@@ -3,6 +3,7 @@ package guru.springframework.controllers;
 import guru.springframework.commands.IngredientCommand;
 import guru.springframework.commands.RecipeCommand;
 import guru.springframework.commands.UnitOfMeasureCommand;
+import guru.springframework.domain.UnitOfMeasure;
 import guru.springframework.services.IngredientService;
 import guru.springframework.services.RecipeService;
 import guru.springframework.services.UnitOfMeasureService;
@@ -36,7 +37,7 @@ public class IngredientController {
         log.debug("Getting ingredient list for recipe id: " + recipeId);
 
         // use command object to avoid lazy load errors in Thymeleaf.
-        model.addAttribute("recipe", recipeService.findCommandById(recipeId));
+        model.addAttribute("recipe", recipeService.findCommandById(recipeId).block());
 
         return "recipe/ingredient/list";
     }
@@ -52,11 +53,12 @@ public class IngredientController {
     public String newRecipe(@PathVariable String recipeId, Model model){
 
         //make sure we have a good id value
-        RecipeCommand recipeCommand = recipeService.findCommandById(recipeId);
+        RecipeCommand recipeCommand = recipeService.findCommandById(recipeId).block();
         //todo raise exception if null
 
         //need to return back parent id for hidden form property
         IngredientCommand ingredientCommand = new IngredientCommand();
+        ingredientCommand.setRecipeId(recipeId);
         model.addAttribute("ingredient", ingredientCommand);
 
         //init uom
@@ -78,6 +80,12 @@ public class IngredientController {
 
     @PostMapping("recipe/{recipeId}/ingredient")
     public String saveOrUpdate(@ModelAttribute IngredientCommand command){
+        if(command.getUom() != null){
+            UnitOfMeasure unitOfMeasure = unitOfMeasureService.findById(command.getUom().getId()).block();
+            String uomDescription = unitOfMeasure.getDescription();
+            command.getUom().setDescription(uomDescription);
+        }
+
         IngredientCommand savedCommand = ingredientService.saveIngredientCommand(command).block();
 
         log.debug("saved ingredient id:" + savedCommand.getId());

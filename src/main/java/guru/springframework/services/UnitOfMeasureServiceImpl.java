@@ -2,10 +2,13 @@ package guru.springframework.services;
 
 import guru.springframework.commands.UnitOfMeasureCommand;
 import guru.springframework.converters.UnitOfMeasureToUnitOfMeasureCommand;
+import guru.springframework.domain.Recipe;
+import guru.springframework.domain.UnitOfMeasure;
 import guru.springframework.repositories.UnitOfMeasureRepository;
 import guru.springframework.repositories.reactive.UnitOfMeasureReactiveRepository;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -23,6 +26,11 @@ public class UnitOfMeasureServiceImpl implements UnitOfMeasureService {
     public UnitOfMeasureServiceImpl(UnitOfMeasureReactiveRepository unitOfMeasureReactiveRepository, UnitOfMeasureToUnitOfMeasureCommand unitOfMeasureToUnitOfMeasureCommand) {
         this.unitOfMeasureReactiveRepository = unitOfMeasureReactiveRepository;
         this.unitOfMeasureToUnitOfMeasureCommand = unitOfMeasureToUnitOfMeasureCommand;
+    }
+
+    @Override
+    public Mono<UnitOfMeasure> findById(String id) {
+        return unitOfMeasureReactiveRepository.findById(id);
     }
 
     @Override

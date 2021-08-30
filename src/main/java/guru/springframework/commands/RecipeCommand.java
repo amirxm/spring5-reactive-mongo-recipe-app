@@ -12,6 +12,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by jt on 6/21/17.
@@ -20,7 +21,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class RecipeCommand {
-    private String id;
+    private String id = UUID.randomUUID().toString();;
 
     @NotBlank
     @Size(min = 3, max = 255)
