@@ -4,7 +4,6 @@ import guru.springframework.domain.Difficulty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.URL;
 
 import javax.validation.constraints.Max;
@@ -23,7 +22,6 @@ import java.util.UUID;
 public class RecipeCommand {
     private String id = UUID.randomUUID().toString();;
 
-    @NotBlank
     @Size(min = 3, max = 255)
     private String description;
 
@@ -43,7 +41,6 @@ public class RecipeCommand {
     @URL
     private String url;
 
-    @NotBlank
     private String directions;
 
     private List<IngredientCommand> ingredients = new ArrayList<>();

@@ -63,7 +63,7 @@ public class IndexControllerTest {
 
         when(recipeService.getRecipes()).thenReturn(Flux.just(new Recipe(), recipe));
 
-        ArgumentCaptor<List<Recipe>> argumentCaptor = ArgumentCaptor.forClass(List.class);
+        ArgumentCaptor<Flux<Recipe>> argumentCaptor = ArgumentCaptor.forClass(Flux.class);
 
         //when
         String viewName = controller.getIndexPage(model);
@@ -73,7 +73,8 @@ public class IndexControllerTest {
         assertEquals("index", viewName);
         verify(recipeService, times(1)).getRecipes();
         verify(model, times(1)).addAttribute(eq("recipes"), argumentCaptor.capture());
-        List<Recipe> recipeList = argumentCaptor.getValue();
+        Flux<Recipe> recipeFlux = argumentCaptor.getValue();
+        List<Recipe> recipeList = recipeFlux.collectList().block();
         assertEquals(2, recipeList.size());
     }
 
