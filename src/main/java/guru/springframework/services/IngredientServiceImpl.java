@@ -54,6 +54,31 @@ public class IngredientServiceImpl implements IngredientService {
     @Override
     public Mono<IngredientCommand> saveIngredientCommand(IngredientCommand command) {
 
+/*
+        Mono<IngredientCommand> ingredientCommandMono = recipeReactiveRepository
+                .findById(command.getRecipeId())
+                .flatMapIterable(Recipe::getIngredients)
+                .filter(ingredient -> ingredient.getId().equalsIgnoreCase(command.getId()))
+                .single()
+                .map(ingredient -> {
+                    if(ingredient == null){
+                        ingredient.setDescription(command.getDescription());
+                        ingredient.setAmount(command.getAmount());
+                        command
+                    } else {
+                        ingredientCommand = ingredientToIngredientCommand.convert(ingredient);
+                    }
+                    ingredientCommand.setRecipeId(command.getRecipeId());
+                    return ingredientCommand;
+                });
+
+        recipeReactiveRepository
+                .findById(command.getRecipeId())
+                .map(recipe -> recipeReactiveRepository.save(recipe));
+*/
+
+
+
         Recipe recipe = recipeReactiveRepository.findById(command.getRecipeId()).block();
 
         if(recipe == null){
